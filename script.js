@@ -1,3 +1,6 @@
+// Replace this with your actual Render URL
+const API_BASE_URL = 'https://ecommerce-6pzl.onrender.com';
+
 // Product icon mapping
 const productIcons = {
     'p1': '💻', // Laptop
@@ -20,17 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchProducts() {
         try {
-            const response = await fetch('/api/products');
+            // Updated to use the full Render URL
+            const response = await fetch(`${API_BASE_URL}/api/products`);
+            if (!response.ok) throw new Error('Network response was not ok');
             const products = await response.json();
             renderProducts(products);
         } catch (error) {
             console.error('Error fetching products:', error);
+            productList.innerHTML = '<p class="error">Unable to load products. The server might be starting up...</p>';
         }
     }
 
     async function fetchCart() {
         try {
-            const response = await fetch('/api/cart');
+            // Updated to use the full Render URL
+            const response = await fetch(`${API_BASE_URL}/api/cart`);
+            if (!response.ok) throw new Error('Network response was not ok');
             const cartItems = await response.json();
             renderCart(cartItems);
             updateCartCount(cartItems);
@@ -116,7 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
             button.innerHTML = '<i class="fas fa-check"></i> Added';
             
             try {
-                await fetch('/api/cart', {
+                // Updated to use the full Render URL
+                await fetch(`${API_BASE_URL}/api/cart`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ productId })
@@ -142,7 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
             removeBtn.disabled = true;
             
             try {
-                await fetch(`/api/cart/${productId}`, {
+                // Updated to use the full Render URL
+                await fetch(`${API_BASE_URL}/api/cart/${productId}`, {
                     method: 'DELETE'
                 });
                 fetchCart();
@@ -158,9 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         
         try {
-            await fetch('/api/checkout', { method: 'POST' });
+            // Updated to use the full Render URL
+            await fetch(`${API_BASE_URL}/api/checkout`, { method: 'POST' });
             
-            // Success animation
             checkoutBtn.innerHTML = '<i class="fas fa-check-circle"></i> Order Placed!';
             checkoutBtn.style.background = '#4caf50';
             
@@ -183,6 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
     fetchCart();
 
-    // Refresh cart every 5 seconds to keep in sync
-    setInterval(fetchCart, 5000);
+    // Refresh cart every 10 seconds to keep in sync
+    setInterval(fetchCart, 10000);
 });
